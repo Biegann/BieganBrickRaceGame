@@ -6,12 +6,25 @@ import com.badlogic.gdx.InputProcessor;
 public class Controller implements InputProcessor {
 
     public boolean upPressed, leftPressed, rightPressed;
+    public boolean leftJustPressed, rightJustPressed;
 
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.UP:
                 upPressed = true;
+                return true;
+            case Input.Keys.LEFT:
+                if (!leftPressed) {
+                    leftPressed = true;
+                    leftJustPressed = true;
+                }
+                return true;
+            case Input.Keys.RIGHT:
+                if (!rightPressed) {
+                    rightPressed = true;
+                    rightJustPressed = true;
+                }
                 return true;
         }
         return false;
@@ -23,9 +36,18 @@ public class Controller implements InputProcessor {
             case Input.Keys.UP:
                 upPressed = false;
                 return true;
+            case Input.Keys.LEFT:
+                leftPressed = false;
+                leftJustPressed = false;
+                return true;
+            case Input.Keys.RIGHT:
+                rightPressed = false;
+                rightJustPressed = false;
+                return true;
         }
         return false;
     }
+
 
     @Override
     public boolean keyTyped(char c) {
