@@ -1,0 +1,103 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/bbg.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/bbg.tmx": {
+            "scale": 4,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 122.25,
+                "y": 99.75
+            }
+        },
+        "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/bg.tsx": {
+            "scaleInDock": 2
+        },
+        "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/ui.tsx": {
+            "scaleInDock": 1
+        },
+        "bbg.tmx": {
+            "scale": 2.2503124999999997,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 160.4221635883905,
+                "y": 99.9861130398556
+            }
+        },
+        "bg.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "car-enemy.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "car-player.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "fuel.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "road.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "tree.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "ui-font [5x5].tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "ui.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "D:/dokumenty/Programowanie/Java/Tiled/projects/brickRace/C64_Style_Racing_Game/2D",
+    "map.height": 50,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "map.tileHeight": 4,
+    "map.tileWidth": 4,
+    "map.width": 80,
+    "openFiles": [
+        "bbg.tmx",
+        "bg.tsx",
+        "road.tsx",
+        "car-enemy.tsx",
+        "car-player.tsx",
+        "fuel.tsx",
+        "tree.tsx",
+        "ui.tsx",
+        "ui-font [5x5].tsx",
+        "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/bbg.tmx"
+    ],
+    "project": "bbrace.tiled-project",
+    "recentFiles": [
+        "bbg.tmx",
+        "bg.tsx",
+        "road.tsx",
+        "car-enemy.tsx",
+        "car-player.tsx",
+        "fuel.tsx",
+        "tree.tsx",
+        "ui.tsx",
+        "ui-font [5x5].tsx",
+        "D:/dokumenty/Programowanie/Java/projects/BieganBrickRaceGame/assets/bbg.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 4,
+        "width": 4
+    }
+}
