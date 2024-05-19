@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.controller.Controller;
+import com.biegan.game.sprites.EnemyCar;
 import com.biegan.game.sprites.Player;
 import com.biegan.game.sprites.RoadStripes;
 
@@ -30,11 +31,20 @@ public class GameScreen implements Screen {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private Texture playerTexture;
 
-    private Controller controller;
+    private Texture playerTexture;
+    private Texture enemyTexture;
+
+    private boolean start;
     private RoadStripes roadStripes;
     private Player player;
+    private EnemyCar enemyCar;
+
+    private Array<EnemyCar> enemyCars;
+    private final float[] xPositions = {120, 230, 330, 430};
+
+    private boolean gameOver = false;
+
 
     public GameScreen(BieganBrickRaceGame game) {
         this.game = game;
@@ -48,8 +58,12 @@ public class GameScreen implements Screen {
 
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        controller = new Controller();
-        Gdx.input.setInputProcessor(controller);
+        enemyCars = new Array<>();
+        for (int i = 0; i < 4; i++) {
+            enemyTexture = new Texture("C64_Style_Racing_Game/2D/car-enemy.png");
+            enemyCar = new EnemyCar(enemyTexture, xPositions[i]);
+            enemyCars.add(enemyCar);
+        }
 
         roadStripes = new RoadStripes(new Texture("C64_Style_Racing_Game/2D/lane.png"));
         player = new Player(playerTexture);
@@ -71,19 +85,39 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
+        if (gameOver) {
+            game.setScreen(new GameOverScreen(game));
+        }
+
         renderer.render(new int[] {map.getLayers().getIndex("background")});
         roadStripes.draw(game.batch);
         renderer.render(new int[] {map.getLayers().getIndex("ui")});
+        for (EnemyCar car: enemyCars) {
+            car.draw(game.batch);
+        }
         player.draw(game.batch);
-        game.batch.end();
 
+        game.batch.end();
     }
 
     public void update(float dt) {
 
-        if (controller.upPressed) roadStripes.updateRoadStripes(dt);
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.LEFT))) player.updatePlayerPosLeft();
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))) player.updatePlayerPosRight();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) start = true;
+        if (start) {
+            roadStripes.updateRoadStripes(dt);
+            for (EnemyCar car : enemyCars) {
+                car.enemyCarUpdate(dt);
+            }
+
+            //sprawdzanie kolizji
+            for (EnemyCar car : enemyCars) {
+                if (car.getBoundingRectangle().overlaps(player.getBoundingRectangle()))
+                    //kolizja! zakoncz gre
+                    gameOver = true;
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) player.updatePlayerPosLeft();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) player.updatePlayerPosRight();
 
         //update our gamecam with correct coordinates after changes
         gameCam.update();

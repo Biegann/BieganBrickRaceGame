@@ -10,6 +10,7 @@ import com.biegan.game.screens.GameScreen;
 public class BieganBrickRaceGame extends Game {
 
 	public static final float sc = 2.5f;
+	public static final float gameSpeed = 400;
 	public SpriteBatch batch;
 
 	@Override

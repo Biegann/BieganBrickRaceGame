@@ -1,6 +1,5 @@
 package com.biegan.game.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,7 +7,7 @@ import com.biegan.game.BieganBrickRaceGame;
 
 public class RoadStripes {
 
-    private float roadSpeed = 400;
+    private float roadSpeed = BieganBrickRaceGame.gameSpeed;
     private Texture roadTexture;
     private TextureRegion roadStripe; // Pojedynczy region tekstury pasa
 
@@ -30,7 +29,7 @@ public class RoadStripes {
 
         // Ustaw początkowe pozycje x i y pasów
         for (int col = 0; col < numColumns; col++) {
-            xPositions[col] = 145 + col * (stripeWidth + 35); // 50 - odstęp między kolumnami
+            xPositions[col] = 145 + col * (stripeWidth + 35); //  odstęp między kolumnami
             for (int row = 0; row < numStripesPerColumn; row++) {
                 yPositions[col][row] = row * 1 * stripeHeight; // Początkowa pozycja z odstępem między pasami
             }
@@ -39,7 +38,7 @@ public class RoadStripes {
 
     public void updateRoadStripes(float dt) {
         float stripeHeight = roadStripe.getRegionHeight() * BieganBrickRaceGame.sc + 70; // Wysokość pasa
-    //    float screenHeight = Gdx.graphics.getHeight(); // Wysokość ekranu
+        //    float screenHeight = Gdx.graphics.getHeight(); // Wysokość ekranu
 
         for (int col = 0; col < numColumns; col++) {
             for (int row = 0; row < numStripesPerColumn; row++) {
@@ -59,7 +58,7 @@ public class RoadStripes {
         for (int col = 0; col < numColumns; col++) {
             for (int row = 0; row < numStripesPerColumn; row++) {
                 batch.draw(roadStripe, xPositions[col], yPositions[col][row],
-                        roadStripe.getRegionWidth() * BieganBrickRaceGame.sc ,
+                        roadStripe.getRegionWidth() * BieganBrickRaceGame.sc,
                         roadStripe.getRegionHeight() * BieganBrickRaceGame.sc);
             }
         }

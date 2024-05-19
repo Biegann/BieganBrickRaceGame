@@ -17,8 +17,8 @@ public class Player extends Sprite {
         this.playerTexture = playerTexture;
         this.playerSprite = new TextureRegion(playerTexture);
 
-        float stripeWidth = playerSprite.getRegionWidth() * BieganBrickRaceGame.sc + 70;
-        float stripeHeight =playerSprite.getRegionHeight() * BieganBrickRaceGame.sc + 70;
+        float stripeWidth = playerSprite.getRegionWidth() * BieganBrickRaceGame.sc;
+        float stripeHeight =playerSprite.getRegionHeight() * BieganBrickRaceGame.sc;
 
         setBounds(positions[currentPositionIndex], 0, stripeWidth, stripeHeight); // Ustaw początkowe wymiary i pozycję
     }
