@@ -6,20 +6,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
-
 import java.util.Random;
 
 public class EnemyCar extends Sprite {
 
     private Texture enemyTexture;
     private TextureRegion enemyRegion;
-    private float enemySpeed = BieganBrickRaceGame.gameSpeed;
+    private float enemySpeed = BieganBrickRaceGame.gameSpeed - 50;
     private float yPosition;
     private float xPosition;
     private Random random = new Random();
-    private float delayTime; // Czas opóźnienia
-    private float elapsedTime; // Upływający czas
-
+    private float delayTime;
+    public float elapsedTime;
+    private boolean scored = false; // Flag to track scores
     private float screenHeight;
 
     public EnemyCar(Texture enemyTexture, float xPosition) {
@@ -27,42 +26,57 @@ public class EnemyCar extends Sprite {
         this.enemyRegion = new TextureRegion(enemyTexture);
         this.xPosition = xPosition;
 
-     //   this.yPosition = random.nextFloat(350) + 100; // Losowanie y z zakresu 100-450
-        screenHeight = Gdx.graphics.getHeight(); // Inicjalizacja w konstruktorze
+        screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);
 
         float stripeWidth = enemyRegion.getRegionWidth() * BieganBrickRaceGame.sc;
         float stripeHeight = enemyRegion.getRegionHeight() * BieganBrickRaceGame.sc;
-        setBounds(xPosition, yPosition, stripeWidth, stripeHeight); // Ustaw początkowe wymiary i pozycję
+        setBounds(xPosition, yPosition, stripeWidth, stripeHeight); // Set initial bounds and positions
     }
 
     public void enemyCarUpdate(float dt) {
         if (elapsedTime >= delayTime) {
             yPosition -= enemySpeed * dt;
-        //    if (yPosition < -getHeight()) {
+            //counting points and resetting position
               if (yPosition + getHeight() < 0) {
                 resetPosition(false);
+                scored = false; //reset of score flag
             }
         } else {
-            elapsedTime += dt; // Zwiększa czas, jeśli jest opóźnienie
+            elapsedTime += dt; // Increase time when it is delay
         }
-        setPosition(xPosition, yPosition); // Aktualizacja pozycji sprite'a
+        setPosition(xPosition, yPosition); // Actualization of sprite position
     }
 
-    private void resetPosition(boolean initial) {
+    public void resetPosition(boolean initial) {
         float stripeHeight = enemyRegion.getRegionHeight() * BieganBrickRaceGame.sc;
         if (initial) {
-            yPosition = screenHeight + random.nextFloat(screenHeight) + 100; // Losowa pozycja Y na początku gry
+            yPosition = screenHeight + random.nextFloat(screenHeight) + 20; // Random Y position at the beginning of game
         } else {
-            yPosition = screenHeight + stripeHeight; // + random.nextFloat(150); // Losowanie y z zakresu 0-150 powyżej ekranu
+            yPosition = screenHeight + stripeHeight + 20; // above screen
         }
-        delayTime = random.nextFloat() * 2 + 0.5f; // Losowe opóźnienie między 1 a 3 sekundami
-        elapsedTime = 0; // Reset upływającego czasu
+        elapsedTime = 0;
     }
 
     public void draw(SpriteBatch batch) {
         batch.draw(enemyRegion, getX(), getY(),
                 enemyRegion.getRegionWidth() * BieganBrickRaceGame.sc,
                 enemyRegion.getRegionHeight() * BieganBrickRaceGame.sc);
+    }
+    public void setSpeed(float enemySpeed) {
+        this.enemySpeed = enemySpeed;
+    }
+    public boolean hasScored() {
+        return  scored;
+    }
+    public void setScored(boolean scored) {
+        this.scored = scored;
+    }
+
+    public float getDelayTime() {
+        return delayTime;
+    }
+    public void setDelayTime(float delayTime) {
+        this.delayTime = delayTime;
     }
 }

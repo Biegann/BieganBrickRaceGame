@@ -10,8 +10,8 @@ public class Player extends Sprite {
 
     private Texture playerTexture;
     private TextureRegion playerSprite;
-    private float[] positions = {120, 230, 330, 430}; // Możliwe pozycje na osi X
-    private int currentPositionIndex = 1; // Początkowa pozycja (230)
+    private float[] positions = {120, 230, 330, 430}; // Possible positions on the X axis
+    private int currentPositionIndex = 1;
 
     public Player(Texture playerTexture) {
         this.playerTexture = playerTexture;
@@ -20,7 +20,7 @@ public class Player extends Sprite {
         float stripeWidth = playerSprite.getRegionWidth() * BieganBrickRaceGame.sc;
         float stripeHeight =playerSprite.getRegionHeight() * BieganBrickRaceGame.sc;
 
-        setBounds(positions[currentPositionIndex], 0, stripeWidth, stripeHeight); // Ustaw początkowe wymiary i pozycję
+        setBounds(positions[currentPositionIndex], 0, stripeWidth, stripeHeight);
     }
 
     public void updatePlayerPosLeft() {
