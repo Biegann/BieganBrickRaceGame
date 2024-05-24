@@ -6,23 +6,27 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
+import com.biegan.game.utilities.GameSpeed;
 
 import java.util.Random;
 
 public class Bushes extends Sprite {
     private Texture bushesTexture;
     private TextureRegion bushesRegion;
-    private float bushesSpeed = BieganBrickRaceGame.gameSpeed;
+    private float bushesSpeed;
     private float yPosition;
     private float xPosition;
     private Random random = new Random();
     private float delayTime;
     public float elapsedTime;
     private float screenHeight;
+    private GameSpeed gameSpeed;
 
     public Bushes(Texture bushesTexture) {
         this.bushesTexture = bushesTexture;
         this.bushesRegion = new TextureRegion(bushesTexture);
+        gameSpeed = new GameSpeed();
+        bushesSpeed =gameSpeed.getGameSpeed();
 
         screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);

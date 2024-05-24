@@ -17,6 +17,7 @@ public class AssetsMan {
         assetManager.load("high-speed-2-192899.mp3", Sound.class);
         assetManager.load("explosion.mp3", Sound.class);
         assetManager.load("speedUp.mp3", Sound.class);
+        assetManager.load("playersound.mp3", Sound.class);
         assetManager.finishLoading();
     }
     public boolean update() {

@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
+import com.biegan.game.utilities.GameSpeed;
+
 import java.util.Random;
 
 public class EnemyCar extends Sprite {
 
     private Texture enemyTexture;
     private TextureRegion enemyRegion;
-    private float enemySpeed = BieganBrickRaceGame.gameSpeed - 50;
+    private float enemySpeed;
     private float yPosition;
     private float xPosition;
     private Random random = new Random();
@@ -20,11 +22,15 @@ public class EnemyCar extends Sprite {
     public float elapsedTime;
     private boolean scored = false; // Flag to track scores
     private float screenHeight;
+    private GameSpeed gameSpeed;
 
     public EnemyCar(Texture enemyTexture, float xPosition) {
         this.enemyTexture = enemyTexture;
         this.enemyRegion = new TextureRegion(enemyTexture);
         this.xPosition = xPosition;
+
+        gameSpeed = new GameSpeed();
+        enemySpeed = gameSpeed.getGameSpeed() - 50;
 
         screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);
@@ -72,7 +78,6 @@ public class EnemyCar extends Sprite {
     public void setScored(boolean scored) {
         this.scored = scored;
     }
-
     public float getDelayTime() {
         return delayTime;
     }

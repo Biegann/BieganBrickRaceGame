@@ -19,6 +19,7 @@ import com.biegan.game.BieganBrickRaceGame;
 import com.biegan.game.scenes.Hud;
 import com.biegan.game.sprites.*;
 import com.biegan.game.utilities.EnemyCarManager;
+import com.biegan.game.utilities.GameSpeed;
 
 public class GameScreen implements Screen {
 
@@ -41,6 +42,7 @@ public class GameScreen implements Screen {
     private Player player;
     private RoadStripes roadStripes;
     private EnemyCarManager enemyCarManager;
+    private GameSpeed gameSpeed;
     private Bushes bushes;
     private Array<Explosion> explosions;
 
@@ -56,6 +58,7 @@ public class GameScreen implements Screen {
         playerTexture = new Texture("C64_Style_Racing_Game/2D/car-player.png");
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(worldWidth, worldHeight , gameCam);
+        gameSpeed = new GameSpeed();
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("bbg.tmx");
@@ -108,7 +111,7 @@ public class GameScreen implements Screen {
         hud.stage.draw();
         //check all explosions finish
         if (gameOver && explosions.size == 0) {
-            game.setScreen(new GameOverScreen(game, gamePort));
+            game.setScreen(new GameOverScreen(game, gamePort, score));
         }
     }
 
@@ -162,8 +165,14 @@ public class GameScreen implements Screen {
                 hud.update(dt);
             }
 
-            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) player.updatePlayerPosLeft();
-            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) player.updatePlayerPosRight();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                game.assetsMan.get("playersound.mp3", Sound.class).play();
+                player.updatePlayerPosLeft();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                game.assetsMan.get("playersound.mp3", Sound.class).play();
+                player.updatePlayerPosRight();
+            }
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) increaseGameSpeed();
 
             //update our gamecam with correct coordinates after changes
@@ -218,11 +227,11 @@ public class GameScreen implements Screen {
 
     public void increaseGameSpeed() {
         game.assetsMan.get("speedUp.mp3", Sound.class).play();
-        BieganBrickRaceGame.gameSpeed += 20; // increase gamespeed
-        roadStripes.setSpeed(BieganBrickRaceGame.gameSpeed);
-        bushes.setSpeed(BieganBrickRaceGame.gameSpeed);
+        gameSpeed.setGameSpeed(gameSpeed.getGameSpeed() + 20); // increase gamespeed
+        roadStripes.setSpeed(gameSpeed.getGameSpeed());
+        bushes.setSpeed(gameSpeed.getGameSpeed());
         for (EnemyCar car : enemyCarManager.getEnemyCars()) {
-            car.setSpeed(BieganBrickRaceGame.gameSpeed - 50);
+            car.setSpeed(gameSpeed.getGameSpeed() - 50);
         }
         hud.incSpeedDisplayValue();
     }

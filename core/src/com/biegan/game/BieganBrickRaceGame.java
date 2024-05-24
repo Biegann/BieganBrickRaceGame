@@ -8,7 +8,6 @@ import com.biegan.game.utilities.AssetsMan;
 public class BieganBrickRaceGame extends Game {
 
 	public static final float sc = 2.5f;
-	public static int gameSpeed = 300;
 	public SpriteBatch batch;
 	public AssetsMan assetsMan;
 

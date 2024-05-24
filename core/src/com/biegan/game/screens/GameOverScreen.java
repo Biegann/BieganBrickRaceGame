@@ -11,20 +11,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
+import com.biegan.game.utilities.GameSpeed;
 
 public class GameOverScreen implements Screen {
 
     private BieganBrickRaceGame game;
     private BitmapFont font;
+    private GameSpeed gameSpeed;
 
     private Stage stage;
     private Label gameOverLabel;
     private Label restartLabel;
     private Label exitLabel;
+    private Label scoreLabel;
+    private int score;
 
-    public GameOverScreen(BieganBrickRaceGame game, Viewport gamePort) {
+    public GameOverScreen(BieganBrickRaceGame game, Viewport gamePort, int score) {
         this.game = game;
+        this.score = score;
         font = new BitmapFont();
+        gameSpeed = new GameSpeed();
 
         stage = new Stage(gamePort, game.batch);
 
@@ -35,8 +41,11 @@ public class GameOverScreen implements Screen {
         gameOverLabel = new Label("GAME OVER!", new Label.LabelStyle(font, Color.WHITE));
         restartLabel = new Label("RESTART - PUSH ENTER", new Label.LabelStyle(font, Color.WHITE));
         exitLabel = new Label("EXIT - PUSH ESC", new Label.LabelStyle(font, Color.WHITE));
+        scoreLabel = new Label("SCORE: " + score, new Label.LabelStyle(font, Color.WHITE));
 
         table.add(gameOverLabel).expandX();
+        table.row();
+        table.add(scoreLabel).expandX().padTop(10f);
         table.row();
         table.add(restartLabel).expandX().padTop(10f);
         table.row();
@@ -60,7 +69,7 @@ public class GameOverScreen implements Screen {
 
         // Buttons operations
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            BieganBrickRaceGame.gameSpeed = 300;
+            gameSpeed.setGameSpeed(300);
             game.setScreen(new GameScreen(game)); // Restart
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit(); // Exit
