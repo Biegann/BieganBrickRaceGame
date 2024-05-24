@@ -13,8 +13,8 @@ public class EnemyCarManager {
 
     // Definition of local constants
     private static final float MIN_DELAY_TIME = 0.5f;
-    private static final float MAX_DELAY_TIME = 3.0f;
-    private static final float MIN_DIFFERENCE = 0.5f;
+    private static final float MAX_DELAY_TIME = 6.0f;
+    private static final float MIN_DIFFERENCE = 0.8f;
 
     public EnemyCarManager() {
         enemyCars = new ArrayList<>();
