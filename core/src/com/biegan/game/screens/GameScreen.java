@@ -3,12 +3,15 @@ package com.biegan.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
@@ -44,6 +47,7 @@ public class GameScreen implements Screen {
 
     private boolean gameOver = false;
     public static int score = 0;
+    private Music music;
 
     public GameScreen(BieganBrickRaceGame game) {
         score = 0;
@@ -104,8 +108,22 @@ public class GameScreen implements Screen {
 
     public void update(float dt) {
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) start = true;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            BieganBrickRaceGame.manager.get("enginestart.mp3", Sound.class).play();
+            start = false;
+
+            // Ustaw timer na 1 sekundę
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    start = true;
+                }
+            }, 1.6f);
+        }
         if (start) {
+            music = BieganBrickRaceGame.manager.get("engine.mp3", Music.class);
+            music.setLooping(true);
+            music.play();
             roadStripes.updateRoadStripes(dt);
             bushes.bushesUpdate(dt);
             enemyCarManager.update(dt);
@@ -114,6 +132,7 @@ public class GameScreen implements Screen {
                 float carY = car.getBoundingRectangle().y;
                 float carHeight = car.getBoundingRectangle().height * BieganBrickRaceGame.sc;
                 if (car.getY() / BieganBrickRaceGame.sc  < 0 && !car.hasScored()) {
+                    BieganBrickRaceGame.manager.get("high-speed-2-192899.mp3", Sound.class).play();
                     score += 50;
                     car.setScored(true);
                 }
@@ -125,6 +144,7 @@ public class GameScreen implements Screen {
                     //collision
                     gameOver = true;
             }
+            if (gameOver) music.stop();
             hud.update(dt);
 
         }
