@@ -11,16 +11,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
 import com.biegan.game.scenes.Hud;
-import com.biegan.game.sprites.Bushes;
-import com.biegan.game.sprites.EnemyCar;
-import com.biegan.game.sprites.Player;
-import com.biegan.game.sprites.RoadStripes;
-import com.biegan.game.tools.EnemyCarManager;
+import com.biegan.game.sprites.*;
+import com.biegan.game.utilities.EnemyCarManager;
 
 public class GameScreen implements Screen {
 
@@ -44,9 +42,12 @@ public class GameScreen implements Screen {
     private RoadStripes roadStripes;
     private EnemyCarManager enemyCarManager;
     private Bushes bushes;
+    private Array<Explosion> explosions;
 
     private boolean gameOver = false;
-    public static int score = 0;
+    private boolean gamePaused = false;
+    private boolean isGameStarted = false;
+    public int score = 0;
     private Music music;
 
     public GameScreen(BieganBrickRaceGame game) {
@@ -64,9 +65,10 @@ public class GameScreen implements Screen {
 
         hud = new Hud(game.batch, this);
         enemyCarManager = new EnemyCarManager();
-        bushes = new Bushes(new Texture("C64_Style_Racing_Game/2D/tree.png"), 550f);
+        bushes = new Bushes(new Texture("C64_Style_Racing_Game/2D/tree.png"));
         roadStripes = new RoadStripes(new Texture("C64_Style_Racing_Game/2D/lane.png"));
         player = new Player(playerTexture);
+        explosions = new Array<>();
     }
 
     @Override
@@ -85,13 +87,8 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
-        if (gameOver) {
-            game.setScreen(new GameOverScreen(game));
-        }
-
-        renderer.render(new int[] {map.getLayers().getIndex("background")});
+        renderer.render();
         roadStripes.draw(game.batch);
-        renderer.render(new int[] {map.getLayers().getIndex("ui")});
 
         for (EnemyCar car: enemyCarManager.getEnemyCars()) {
             car.draw(game.batch);
@@ -99,65 +96,91 @@ public class GameScreen implements Screen {
 
         player.draw(game.batch);
         bushes.draw(game.batch);
+
+        for (Explosion explosion : explosions) {
+            explosion.render(game.batch);
+        }
+
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.act(delta);
         hud.stage.draw();
+        //check all explosions finish
+        if (gameOver && explosions.size == 0) {
+            game.setScreen(new GameOverScreen(game, gamePort));
+        }
     }
 
     public void update(float dt) {
+        if (!gamePaused) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !isGameStarted) {
+                game.assetsMan.get("enginestart.mp3", Sound.class).play();
+                start = false;
+                isGameStarted = true;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            BieganBrickRaceGame.manager.get("enginestart.mp3", Sound.class).play();
-            start = false;
+                // Set timer
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        start = true;
+                    }
+                }, 1.6f);
+            }
+            if (start) {
+                music = game.assetsMan.get("engine.mp3", Music.class);
+                music.setLooping(true);
+                music.play();
+                roadStripes.updateRoadStripes(dt);
+                bushes.bushesUpdate(dt);
+                enemyCarManager.update(dt);
+                for (EnemyCar car : enemyCarManager.getEnemyCars()) {
+                    // Use getBoundingRectangle() to get actual Y position
+                    float carY = car.getBoundingRectangle().y;
+                    float carHeight = car.getBoundingRectangle().height * BieganBrickRaceGame.sc;
+                    if (car.getY() / BieganBrickRaceGame.sc < 0 && !car.hasScored()) {
+                        game.assetsMan.get("high-speed-2-192899.mp3", Sound.class).play();
+                        score += 50;
+                        car.setScored(true);
+                    }
+                }
 
-            // Ustaw timer na 1 sekundę
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    start = true;
+                //collision check
+                for (EnemyCar car : enemyCarManager.getEnemyCars()) {
+                    if (car.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+                        //collision
+                        game.assetsMan.get("explosion.mp3", Sound.class).play();
+                        gameOver = true;
+                        gamePaused = true;
+                        explosions.add(new Explosion(car.getX(), car.getY(), 0));
+                        explosions.add(new Explosion(player.getX(), player.getY(), 0));
+                        music.stop();
+                        break;
+                    }
                 }
-            }, 1.6f);
-        }
-        if (start) {
-            music = BieganBrickRaceGame.manager.get("engine.mp3", Music.class);
-            music.setLooping(true);
-            music.play();
-            roadStripes.updateRoadStripes(dt);
-            bushes.bushesUpdate(dt);
-            enemyCarManager.update(dt);
-            for (EnemyCar car : enemyCarManager.getEnemyCars()) {
-                // Use getBoundingRectangle() to get actual Y position
-                float carY = car.getBoundingRectangle().y;
-                float carHeight = car.getBoundingRectangle().height * BieganBrickRaceGame.sc;
-                if (car.getY() / BieganBrickRaceGame.sc  < 0 && !car.hasScored()) {
-                    BieganBrickRaceGame.manager.get("high-speed-2-192899.mp3", Sound.class).play();
-                    score += 50;
-                    car.setScored(true);
-                }
+
+                hud.update(dt);
             }
 
-            //collision check
-            for (EnemyCar car : enemyCarManager.getEnemyCars()) {
-                if (car.getBoundingRectangle().overlaps(player.getBoundingRectangle()))
-                    //collision
-                    gameOver = true;
-            }
-            if (gameOver) music.stop();
-            hud.update(dt);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) player.updatePlayerPosLeft();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) player.updatePlayerPosRight();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) increaseGameSpeed();
 
+            //update our gamecam with correct coordinates after changes
+            gameCam.update();
+            //tell our renderer to draw only what our camera can see in aur game world
+            renderer.setView(gameCam);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) player.updatePlayerPosLeft();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) player.updatePlayerPosRight();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) increaseGameSpeed();
-
-        //update our gamecam with correct coordinates after changes
-        gameCam.update();
-        //tell our renderer to draw only what our camera can see in aur game world
-        renderer.setView(gameCam);
+        else {
+            // Actualization of only explosions when game is paused
+            for (int i = 0; i < explosions.size; i++) {
+                explosions.get(i).update(dt);
+                if (explosions.get(i).isFinished()) {
+                    explosions.removeIndex(i);
+                }
+            }
+        }
     }
-
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height);
@@ -180,20 +203,35 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        game.batch.dispose();
+        playerTexture.dispose();
+        map.dispose();
+        renderer.dispose();
+        for (Explosion explosion : explosions) {
+            explosion.dispose();
+        }
     }
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 
     public void increaseGameSpeed() {
+        game.assetsMan.get("speedUp.mp3", Sound.class).play();
         BieganBrickRaceGame.gameSpeed += 20; // increase gamespeed
         roadStripes.setSpeed(BieganBrickRaceGame.gameSpeed);
         bushes.setSpeed(BieganBrickRaceGame.gameSpeed);
         for (EnemyCar car : enemyCarManager.getEnemyCars()) {
             car.setSpeed(BieganBrickRaceGame.gameSpeed - 50);
         }
-        hud.setGameSpeed();
+        hud.incSpeedDisplayValue();
+    }
+
+    public float getWorldWidth() {
+        return worldWidth;
+    }
+
+    public float getWorldHeight() {
+        return worldHeight;
     }
 }

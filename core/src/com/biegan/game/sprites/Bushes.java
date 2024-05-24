@@ -20,10 +20,9 @@ public class Bushes extends Sprite {
     public float elapsedTime;
     private float screenHeight;
 
-    public Bushes(Texture bushesTexture, float xPosition) {
+    public Bushes(Texture bushesTexture) {
         this.bushesTexture = bushesTexture;
         this.bushesRegion = new TextureRegion(bushesTexture);
-        this.xPosition = xPosition;
 
         screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);
@@ -50,8 +49,10 @@ public class Bushes extends Sprite {
         float stripeHeight = bushesRegion.getRegionHeight() * BieganBrickRaceGame.sc;
         if (initial) {
             yPosition = screenHeight - 50; // position Y at the beginning
+            xPosition = random.nextFloat(500, 580);
         } else {
-            yPosition = screenHeight + stripeHeight + 20; // above screen
+            yPosition = screenHeight + stripeHeight + 20;
+            xPosition = random.nextFloat(530, 580);// above screen
         }
         elapsedTime = 0; // Reset of elapsed time
     }

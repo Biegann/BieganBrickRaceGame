@@ -1,4 +1,4 @@
-package com.biegan.game.tools;
+package com.biegan.game.utilities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.biegan.game.sprites.EnemyCar;

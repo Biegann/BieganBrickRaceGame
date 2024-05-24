@@ -25,11 +25,13 @@ public class Hud implements Disposable {
     Label gameSpeedLabel;
     private GameScreen gameScreen;
 
-    private final float worldWidth = 800; // witdh of game world
-    private final float worldHeight = 500; // height of game world
+    private float worldWidth; // witdh of game world
+    private float worldHeight; // height of game world
 
     public Hud(SpriteBatch sb, GameScreen gameScreen) {
         this.gameScreen = gameScreen;
+        worldWidth = gameScreen.getWorldWidth();
+        worldHeight = gameScreen.getWorldHeight();
 
         gameCam = new OrthographicCamera();
         viewport = new FitViewport(worldWidth, worldHeight , gameCam);
@@ -45,9 +47,9 @@ public class Hud implements Disposable {
         font.getData().setScale(1.2f); // Scale up font
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
-        scoreLabel = new Label(String.format("Score : %06d", GameScreen.getScore()),
+        scoreLabel = new Label(String.format("Score : %06d", gameScreen.getScore()),
                 labelStyle);
-        gameSpeedLabel = new Label(String.format("Speed: %03d", gameSpeed),
+        gameSpeedLabel = new Label(String.format("Speed : %03d", gameSpeed),
                 labelStyle);
 
         table.add(scoreLabel).expandX().fillX().pad(10);
@@ -62,14 +64,14 @@ public class Hud implements Disposable {
         stage.dispose();
     }
 
-    public void setGameSpeed() {
+    public void incSpeedDisplayValue() {
         gameSpeed ++;
-        gameSpeedLabel.setText(String.format("Speed: %03d", gameSpeed));
+        gameSpeedLabel.setText(String.format("Speed : %03d", gameSpeed));
     }
 
     public void update(float delta) {
-        int score = GameScreen.getScore();
-        scoreLabel.setText(String.format("Score : %06d", gameScreen.getScore()));
+        int score = gameScreen.getScore();
+        scoreLabel.setText(String.format("Score : %06d", score));
         if (score % 500 == 0 && score != 0 && score != lastSpeedIncreaseScore) {
             gameScreen.increaseGameSpeed();
             lastSpeedIncreaseScore = score;
