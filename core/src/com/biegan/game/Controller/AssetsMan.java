@@ -1,4 +1,4 @@
-package com.biegan.game.utilities;
+package com.biegan.game.Controller;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;

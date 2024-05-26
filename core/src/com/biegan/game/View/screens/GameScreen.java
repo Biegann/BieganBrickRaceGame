@@ -1,4 +1,4 @@
-package com.biegan.game.screens;
+package com.biegan.game.View.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,10 +16,10 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.scenes.Hud;
-import com.biegan.game.sprites.*;
-import com.biegan.game.utilities.EnemyCarManager;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
+import com.biegan.game.View.Hud;
+import com.biegan.game.View.sprites.*;
+import com.biegan.game.Model.EnemyCarManager;
 
 public class GameScreen implements Screen {
 
@@ -27,6 +27,7 @@ public class GameScreen implements Screen {
     private BieganBrickRaceGame game;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
+    private GameController controller;
 
     private final float worldWidth = 800; // Width of game world
     private final float worldHeight = 500; // Height of game world
@@ -42,7 +43,6 @@ public class GameScreen implements Screen {
     private Player player;
     private RoadStripes roadStripes;
     private EnemyCarManager enemyCarManager;
-    private GameSpeed gameSpeed;
     private Bushes bushes;
     private Array<Explosion> explosions;
 
@@ -52,13 +52,13 @@ public class GameScreen implements Screen {
     public int score = 0;
     private Music music;
 
-    public GameScreen(BieganBrickRaceGame game) {
+    public GameScreen(BieganBrickRaceGame game, GameController controller) {
         score = 0;
         this.game = game;
         playerTexture = new Texture("C64_Style_Racing_Game/2D/car-player.png");
         gameCam = new OrthographicCamera();
         gamePort = new FitViewport(worldWidth, worldHeight , gameCam);
-        gameSpeed = new GameSpeed();
+        this.controller = controller;
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("bbg.tmx");
@@ -227,11 +227,11 @@ public class GameScreen implements Screen {
 
     public void increaseGameSpeed() {
         game.assetsMan.get("speedUp.mp3", Sound.class).play();
-        gameSpeed.setGameSpeed(gameSpeed.getGameSpeed() + 20); // increase gamespeed
-        roadStripes.setSpeed(gameSpeed.getGameSpeed());
-        bushes.setSpeed(gameSpeed.getGameSpeed());
+        controller.setGameSpeed(controller.getGameSpeed() + 20); // increase gamespeed
+        roadStripes.setSpeed(controller.getGameSpeed());
+        bushes.setSpeed(controller.getGameSpeed());
         for (EnemyCar car : enemyCarManager.getEnemyCars()) {
-            car.setSpeed(gameSpeed.getGameSpeed() - 50);
+            car.setSpeed(controller.getGameSpeed() - 50);
         }
         hud.incSpeedDisplayValue();
     }

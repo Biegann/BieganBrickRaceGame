@@ -1,4 +1,4 @@
-package com.biegan.game.sprites;
+package com.biegan.game.View.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

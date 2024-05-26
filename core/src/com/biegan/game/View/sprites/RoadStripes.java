@@ -1,10 +1,10 @@
-package com.biegan.game.sprites;
+package com.biegan.game.View.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
 
 public class RoadStripes {
 
@@ -16,13 +16,13 @@ public class RoadStripes {
     private float[] xPositions; // An array of x positions for each column
     private int numStripesPerColumn = 4;
     private int numColumns = 2;
-    private GameSpeed gameSpeed;
+    private GameController controller;
 
-    public RoadStripes(Texture roadTexture) {
+    public RoadStripes(Texture roadTexture, GameController controller) {
         this.roadTexture = roadTexture;
         this.roadStripe = new TextureRegion(roadTexture);
-        gameSpeed = new GameSpeed();
-        roadSpeed = gameSpeed.getGameSpeed();
+        this.controller = controller;
+        roadSpeed = controller.getGameSpeed();
 
         yPositions = new float[numColumns][numStripesPerColumn];
         xPositions = new float[numColumns];

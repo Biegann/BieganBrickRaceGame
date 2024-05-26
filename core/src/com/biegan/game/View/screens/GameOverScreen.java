@@ -1,4 +1,4 @@
-package com.biegan.game.screens;
+package com.biegan.game.View.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,13 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
 
 public class GameOverScreen implements Screen {
 
     private BieganBrickRaceGame game;
     private BitmapFont font;
-    private GameSpeed gameSpeed;
+    private GameController controller;
 
     private Stage stage;
     private Label gameOverLabel;
@@ -30,7 +30,7 @@ public class GameOverScreen implements Screen {
         this.game = game;
         this.score = score;
         font = new BitmapFont();
-        gameSpeed = new GameSpeed();
+        controller = game.getController();
 
         stage = new Stage(gamePort, game.batch);
 
@@ -69,7 +69,7 @@ public class GameOverScreen implements Screen {
 
         // Buttons operations
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            gameSpeed.setGameSpeed(300);
+            controller.setGameSpeed(300);
             game.setScreen(new GameScreen(game)); // Restart
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit(); // Exit

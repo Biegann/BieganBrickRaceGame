@@ -1,4 +1,4 @@
-package com.biegan.game.sprites;
+package com.biegan.game.View.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
 
 import java.util.Random;
 
@@ -14,23 +14,16 @@ public class EnemyCar extends Sprite {
 
     private Texture enemyTexture;
     private TextureRegion enemyRegion;
-    private float enemySpeed;
-    private float yPosition;
-    private float xPosition;
-    private Random random = new Random();
-    private float delayTime;
-    public float elapsedTime;
-    private boolean scored = false; // Flag to track scores
-    private float screenHeight;
-    private GameSpeed gameSpeed;
 
-    public EnemyCar(Texture enemyTexture, float xPosition) {
+
+
+    public EnemyCar(Texture enemyTexture, float xPosition, GameController controller) {
         this.enemyTexture = enemyTexture;
         this.enemyRegion = new TextureRegion(enemyTexture);
         this.xPosition = xPosition;
 
-        gameSpeed = new GameSpeed();
-        enemySpeed = gameSpeed.getGameSpeed() - 50;
+        this.controller = controller;
+        enemySpeed = controller.getGameSpeed() - 50;
 
         screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);
@@ -57,7 +50,7 @@ public class EnemyCar extends Sprite {
     public void resetPosition(boolean initial) {
         float stripeHeight = enemyRegion.getRegionHeight() * BieganBrickRaceGame.sc;
         if (initial) {
-            yPosition = screenHeight + random.nextFloat(screenHeight) + 20; // Random Y position at the beginning of game
+            yPosition = screenHeight + random.nextFloat()%screenHeight + 20; // Random Y position at the beginning of game
         } else {
             yPosition = screenHeight + stripeHeight + 20; // above screen
         }
