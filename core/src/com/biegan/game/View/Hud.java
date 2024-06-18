@@ -10,47 +10,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.biegan.game.View.screens.GameScreen;
+import com.biegan.game.Controller.GameController;
 
 public class Hud implements Disposable {
 
-    public Stage stage;
+    private Stage stage;
     private Viewport viewport;
     private OrthographicCamera gameCam;
+    private GameController controller;
 
-    private int gameSpeed = 1;
-    private int lastSpeedIncreaseScore = 0;
+    private Label scoreLabel;
+    private Label gameSpeedLabel;
 
-    public Label scoreLabel;
-    Label gameSpeedLabel;
-    private GameScreen gameScreen;
-
-    private float worldWidth; // witdh of game world
-    private float worldHeight; // height of game world
-
-    public Hud(SpriteBatch sb, GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
-        worldWidth = gameScreen.getWorldWidth();
-        worldHeight = gameScreen.getWorldHeight();
+    public Hud(SpriteBatch sb, GameController controller) {
+        this.controller = controller;
 
         gameCam = new OrthographicCamera();
-        viewport = new FitViewport(worldWidth, worldHeight , gameCam);
+        viewport = new FitViewport(controller.getWorldWidth(), controller.getWorldHeight(), gameCam);
         stage = new Stage(viewport, sb);
 
         Table table = new Table();
         table.top();
-        table.setFillParent(true);
-
-        table.setPosition(650, 0); // set table positions
+        table.setPosition(720, 500);
 
         BitmapFont font = new BitmapFont();
         font.getData().setScale(1.2f); // Scale up font
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
-        scoreLabel = new Label(String.format("Score : %06d", gameScreen.getScore()),
-                labelStyle);
-        gameSpeedLabel = new Label(String.format("Speed : %03d", gameSpeed),
-                labelStyle);
+        scoreLabel = new Label(String.format("Score : %06d", controller.getScore()), labelStyle);
+        gameSpeedLabel = new Label(String.format("Speed : %04d",(int) controller.getGameSpeed()), labelStyle);
 
         table.add(scoreLabel).expandX().fillX().pad(10);
         table.row();
@@ -65,17 +53,18 @@ public class Hud implements Disposable {
     }
 
     public void incSpeedDisplayValue() {
-        gameSpeed ++;
-        gameSpeedLabel.setText(String.format("Speed : %03d", gameSpeed));
+        int gameSpeed =  (int) controller.getGameSpeed();
+        gameSpeedLabel.setText(String.format("Speed : %04d", gameSpeed));
     }
 
     public void update(float delta) {
-        int score = gameScreen.getScore();
+        int score = controller.getScore();
         scoreLabel.setText(String.format("Score : %06d", score));
-        if (score % 500 == 0 && score != 0 && score != lastSpeedIncreaseScore) {
-            gameScreen.increaseGameSpeed();
-            lastSpeedIncreaseScore = score;
-        }
-        stage.act(delta); // Call act() on the stage object
+
+        stage.act(delta);
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

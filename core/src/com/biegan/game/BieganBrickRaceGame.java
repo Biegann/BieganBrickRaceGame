@@ -3,7 +3,6 @@ package com.biegan.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.biegan.game.Controller.GameController;
-import com.biegan.game.View.screens.GameScreen;
 import com.biegan.game.Controller.AssetsMan;
 
 public class BieganBrickRaceGame extends Game {
@@ -18,7 +17,7 @@ public class BieganBrickRaceGame extends Game {
 		batch = new SpriteBatch();
 		assetsMan = new AssetsMan();
 		assetsMan.load();
-		controller = new GameController();
+		controller = new GameController(this);
 	}
 
 	@Override

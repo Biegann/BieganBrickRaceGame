@@ -5,34 +5,37 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
+import com.biegan.game.Controller.GameController;
 
 public class Player extends Sprite {
 
     private Texture playerTexture;
     private TextureRegion playerSprite;
-    private float[] positions = {120, 230, 330, 430}; // Possible positions on the X axis
+    private GameController controller;
+    private float[] positionsX; ; // Possible positions on the X axis
     private int currentPositionIndex = 1;
 
-    public Player(Texture playerTexture) {
-        this.playerTexture = playerTexture;
+    public Player(GameController controller) {
+        this.positionsX = controller.getPositionX().getPositionsX();
+        playerTexture = new Texture("C64_Style_Racing_Game/2D/car-player.png");
         this.playerSprite = new TextureRegion(playerTexture);
 
         float stripeWidth = playerSprite.getRegionWidth() * BieganBrickRaceGame.sc;
         float stripeHeight =playerSprite.getRegionHeight() * BieganBrickRaceGame.sc;
 
-        setBounds(positions[currentPositionIndex], 0, stripeWidth, stripeHeight);
+        setBounds(positionsX[currentPositionIndex], 0, stripeWidth, stripeHeight);
     }
 
     public void updatePlayerPosLeft() {
         if (currentPositionIndex > 0) {
             currentPositionIndex--;
-            setX(positions[currentPositionIndex]);
+            setX(positionsX[currentPositionIndex]);
         }
     }
     public void updatePlayerPosRight() {
-        if (currentPositionIndex < positions.length - 1) {
+        if (currentPositionIndex < positionsX.length - 1) {
             currentPositionIndex++;
-            setX(positions[currentPositionIndex]);
+            setX(positionsX[currentPositionIndex]);
         }
     }
     public void draw(SpriteBatch batch) {

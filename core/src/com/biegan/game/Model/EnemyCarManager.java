@@ -1,60 +1,87 @@
 package com.biegan.game.Model;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Array;
+import com.biegan.game.BieganBrickRaceGame;
 import com.biegan.game.Controller.GameController;
 import com.biegan.game.View.sprites.EnemyCar;
-import java.util.*;
+
+import java.util.Random;
 
 public class EnemyCarManager {
-
-    private List<EnemyCar> enemyCars;
-    private Texture enemyTexture;
-    private float[] trackPositions; // X positions for each track
-    private Random random;
     private GameModel model;
+    private GameController controller;
+    private Array<EnemyCar> enemyCars;
+    private final float enemyHeight;
+    private float[] trackPositions;
+    private Random random;
+    private boolean isMoving;
+    private float lastYPosition;
 
-    // Definition of local constants
-    private static final float MIN_DELAY_TIME = 0.5f;
-    private static final float MAX_DELAY_TIME = 6.0f;
-    private static final float MIN_DIFFERENCE = 0.8f;
-
-    public EnemyCarManager(GameModel model) {
+    public EnemyCarManager(GameModel model, GameController controller) {
+        isMoving = false;
+        this.random = new Random();
         this.model = model;
-        enemyCars = new ArrayList<>();
-        enemyTexture = new Texture("C64_Style_Racing_Game/2D/car-enemy.png");
-        random = new Random();
-        trackPositions = new float[]{120, 230, 330, 430};
+        this.controller = controller;
+        this.trackPositions = controller.getPositionX().getPositionsX();
+        this.enemyCars = new Array<>();
+        this.lastYPosition = - 9999;
+        // Initialize enemy height
+        this.enemyHeight = new EnemyCar(trackPositions[0], 0).getEnemyHeight();
 
+        // Initialize enemy cars for each track position
         for (float xPosition : trackPositions) {
-            EnemyCar enemyCar = new EnemyCar(enemyTexture, xPosition, model);
-            enemyCar.setDelayTime(generateUniqueDelayTime());
+            float yPosition = getRandomYPosition();
+            EnemyCar enemyCar = new EnemyCar(xPosition, yPosition);
             enemyCars.add(enemyCar);
         }
     }
 
     public void update(float dt) {
-        for (EnemyCar enemyCar : enemyCars) {
-            enemyCar.enemyCarUpdate(dt);
+        if (isMoving) {
+            for (EnemyCar enemyCar : enemyCars) {
+                enemyCarUpdate(enemyCar, dt);
+            }
         }
     }
 
-    public float generateUniqueDelayTime() {
-        float delayTime;
-        boolean isUnique;
-        do {
-            isUnique = true;
-            delayTime = MIN_DELAY_TIME + random.nextFloat() * (MAX_DELAY_TIME - MIN_DELAY_TIME);
-            for (EnemyCar car : enemyCars) {
-                if (Math.abs(car.getDelayTime() - delayTime) < MIN_DIFFERENCE) {
-                    isUnique = false;
-                    break;
-                }
-            }
-        } while (!isUnique);
-        return delayTime;
+    private void enemyCarUpdate(EnemyCar enemyCar, float dt) {
+        enemyCar.setY(enemyCar.getY() - model.getEnemySpeed() * dt);
+        if (enemyCar.getY() + enemyCar.getEnemyRegion().getRegionHeight() * BieganBrickRaceGame.sc < 0) {
+            resetEnemyCarPosition(enemyCar);
+            model.setScored(false);
+        }
     }
 
-    public List<EnemyCar>  getEnemyCars() {
-        return  enemyCars;
+
+    public void resetEnemyCars() {
+        for (EnemyCar car : enemyCars) {
+            resetEnemyCarPosition(car);
+        }
+    }
+
+    private void resetEnemyCarPosition(EnemyCar car) {
+        float yPosition = getRandomYPosition();
+        car.setY(yPosition);
+    }
+
+    private float getRandomYPosition() {
+        float spriteHieght = enemyHeight * BieganBrickRaceGame.sc;
+        float randomY;
+
+        do {
+            randomY = model.getScreenHeight() + random.nextFloat(3) * spriteHieght * BieganBrickRaceGame.sc;
+        } while (Math.abs(randomY - lastYPosition) < 500);
+
+        lastYPosition = randomY;
+
+        return randomY;
+    }
+
+    public Array<EnemyCar> getEnemyCars() {
+        return enemyCars;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
     }
 }
