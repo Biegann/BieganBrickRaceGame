@@ -1,42 +1,26 @@
-package com.biegan.game.Controller;
+package com.biegan.game.View.inputProcessors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.biegan.game.View.sprites.Player;
+import com.biegan.game.Controller.GameController;
 
-public class GameInput implements InputProcessor {
+public class OverInput implements InputProcessor {
 
-  private final GameController controller;
-  private final Player player;
+    private final GameController controller;
 
-    public GameInput(GameController controller, Player player) {
+    public OverInput(GameController controller) {
         this.controller = controller;
-        this.player = player;
-
     }
 
-    public void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && controller.getState() != GameController.GAME_STATE.STARTED) {
-            startGame();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player.updatePlayerPosLeft();
-            controller.playerSound();
-        }
+    public void handleInput () {
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player.updatePlayerPosRight();
-            controller.playerSound();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            controller.restart();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            controller.increaseGameSpeed();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit(); // Exit
         }
-
-    }
-
-    public void startGame() {
-        controller.setState(GameController.GAME_STATE.STARTED);
     }
 
     @Override

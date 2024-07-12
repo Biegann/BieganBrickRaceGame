@@ -8,28 +8,25 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.biegan.game.BieganBrickRaceGame;
 import com.biegan.game.Controller.GameController;
-import com.biegan.game.Controller.OverInput;
+import com.biegan.game.View.inputProcessors.OverInput;
 
 public class GameOverScreen implements Screen {
 
-    private BieganBrickRaceGame game;
-    private BitmapFont font;
-    private GameController controller;
-    private OverInput overInput;
+    private final BitmapFont font;
+    private final GameController controller;
+    private final OverInput overInput;
 
-    private Stage stage;
+    private final Stage stage;
     private Label gameOverLabel;
     private Label restartLabel;
     private Label exitLabel;
-    private Label scoreLabel;
+    private final Label scoreLabel;
 
-    public GameOverScreen(BieganBrickRaceGame game) {
-        this.game = game;
-        this.controller = game.getController();
+    public GameOverScreen(GameController controller) {
+        this.controller = controller;
         this.font = new BitmapFont();
-        this.overInput = controller.getOverInput();
+        this.overInput = new OverInput(controller);
         this.stage = new Stage();
 
         Table table = new Table();
@@ -62,6 +59,8 @@ public class GameOverScreen implements Screen {
         overInput.handleInput();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        scoreLabel.setText("SCORE: " + controller.getScore());
 
         stage.act(dt);
         stage.draw();

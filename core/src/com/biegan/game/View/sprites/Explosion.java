@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class Explosion {
-    private Animation<TextureRegion> explosionAnimation;
+    private final Animation<TextureRegion> explosionAnimation;
     private  float stateTime;
-    private float x, y;
+    private final float x;
+    private final float y;
 
     public Explosion(float x, float y, float stateTime) {
         this.x = x;

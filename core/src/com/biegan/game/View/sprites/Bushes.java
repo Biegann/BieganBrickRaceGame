@@ -12,15 +12,15 @@ import com.biegan.game.Controller.GameController;
 import java.util.Random;
 
 public class Bushes extends Sprite implements Disposable {
-    private Texture bushesTexture = new Texture("C64_Style_Racing_Game/2D/tree.png");
-    private TextureRegion bushesRegion;
+    private final Texture bushesTexture = new Texture("C64_Style_Racing_Game/2D/tree.png");
+    private final TextureRegion bushesRegion;
     private float bushesSpeed;
     private float yPosition;
     private float xPosition;
-    private Random random = new Random();
+    private final Random random = new Random();
     private float delayTime;
     public float elapsedTime;
-    private float screenHeight;
+    private final float screenHeight;
     private GameController controller;
     private boolean isMoving;
 

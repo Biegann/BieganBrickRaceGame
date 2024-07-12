@@ -10,13 +10,14 @@ import com.biegan.game.Controller.GameController;
 public class Player extends Sprite {
 
     private Texture playerTexture;
-    private TextureRegion playerSprite;
+    private final TextureRegion playerSprite;
     private GameController controller;
-    private float[] positionsX; ; // Possible positions on the X axis
+    private final float[] positionsX; ; // Possible positions on the X axis
     private int currentPositionIndex = 1;
 
     public Player(GameController controller) {
-        this.positionsX = controller.getPositionX().getPositionsX();
+        this.controller = controller;
+        this.positionsX = controller.getPositionX();
         playerTexture = new Texture("C64_Style_Racing_Game/2D/car-player.png");
         this.playerSprite = new TextureRegion(playerTexture);
 

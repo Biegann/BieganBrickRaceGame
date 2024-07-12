@@ -9,8 +9,8 @@ import com.biegan.game.BieganBrickRaceGame;
 public class EnemyCar extends Sprite {
 
     private Texture enemyTexture = new Texture("C64_Style_Racing_Game/2D/car-enemy.png");
-    private TextureRegion enemyRegion;
-    private float enemyHeight;
+    private final TextureRegion enemyRegion;
+    private final float enemyHeight;
 
     public EnemyCar(float xPosition, float yPosition) {
         this.enemyRegion = new TextureRegion(enemyTexture);

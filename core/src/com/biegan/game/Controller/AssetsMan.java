@@ -11,7 +11,7 @@ public class AssetsMan {
         assetManager = new AssetManager();
     }
 
-    public void load() {
+    public void loadGameScreenAssets() {
         assetManager.load("engine.mp3", Music.class);
         assetManager.load("playersound.mp3", Sound.class);
         assetManager.load("enginestart.mp3", Sound.class);

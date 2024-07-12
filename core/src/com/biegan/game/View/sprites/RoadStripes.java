@@ -10,12 +10,12 @@ public class RoadStripes {
 
     private float roadSpeed;
     private Texture roadTexture = new Texture("C64_Style_Racing_Game/2D/lane.png");
-    private TextureRegion roadStripe; // Single region of lane texture
+    private final TextureRegion roadStripe; // Single region of lane texture
 
-    private float[][] yPositions; // An array of y positions far each column and lane
-    private float[] xPositions; // An array of x positions for each column
-    private int numStripesPerColumn = 4;
-    private int numColumns = 2;
+    private final float[][] yPositions; // An array of y positions far each column and lane
+    private final float[] xPositions; // An array of x positions for each column
+    private final int numStripesPerColumn = 4;
+    private final int numColumns = 2;
     private GameController controller;
     private boolean isMoving;
 
