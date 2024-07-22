@@ -1,6 +1,5 @@
 package com.biegan.game.Controller;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.biegan.game.BieganBrickRaceGame;
 import com.biegan.game.Model.GameModel;

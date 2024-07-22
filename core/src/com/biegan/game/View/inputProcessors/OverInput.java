@@ -13,18 +13,17 @@ public class OverInput implements InputProcessor {
         this.controller = controller;
     }
 
-    public void handleInput () {
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            controller.restart();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit(); // Exit
-        }
-    }
-
     @Override
     public boolean keyDown(int i) {
+        if (i == Input.Keys.ENTER) {
+            controller.restart();
+            return true;
+        }
+
+        if (i == Input.Keys.ESCAPE) {
+            Gdx.app.exit(); // Exit
+            return true;
+        }
         return false;
     }
 

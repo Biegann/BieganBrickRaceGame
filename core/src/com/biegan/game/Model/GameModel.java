@@ -144,7 +144,6 @@ public class GameModel {
         }
     }
 
-
     public void resetEnemyCars() {
         for (EnemyCar car : enemyCars) {
             resetEnemyCarPosition(car);

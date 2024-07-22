@@ -54,8 +54,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(GameController controller) {
 
-        Gdx.app.log("GameScreen", "Inicjalizacja GameScreen.");
-        batch = new SpriteBatch();
+        this.batch = new SpriteBatch();
         this.controller = controller;
         this.assetsMan = controller.getAssetsMan();
         this.gameCam = new OrthographicCamera();
@@ -98,7 +97,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(gameInput);
     }
 
     @Override
@@ -225,7 +223,6 @@ public class GameScreen implements Screen {
         roadStripes.setSpeed(controller.getGameSpeed());
         bushes.setSpeed(controller.getGameSpeed());
         resetUI();
-        Gdx.input.setInputProcessor(gameInput);
     }
 
     @Override
