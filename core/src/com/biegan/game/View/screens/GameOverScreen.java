@@ -1,7 +1,6 @@
-package com.biegan.game.screens;
+package com.biegan.game.View.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,30 +8,26 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
+import com.biegan.game.View.inputProcessors.OverInput;
 
 public class GameOverScreen implements Screen {
 
-    private BieganBrickRaceGame game;
-    private BitmapFont font;
-    private GameSpeed gameSpeed;
+    private final BitmapFont font;
+    private final GameController controller;
+    private final OverInput overInput;
 
-    private Stage stage;
+    private final Stage stage;
     private Label gameOverLabel;
     private Label restartLabel;
     private Label exitLabel;
-    private Label scoreLabel;
-    private int score;
+    private final Label scoreLabel;
 
-    public GameOverScreen(BieganBrickRaceGame game, Viewport gamePort, int score) {
-        this.game = game;
-        this.score = score;
-        font = new BitmapFont();
-        gameSpeed = new GameSpeed();
-
-        stage = new Stage(gamePort, game.batch);
+    public GameOverScreen(GameController controller) {
+        this.controller = controller;
+        this.font = new BitmapFont();
+        this.overInput = new OverInput(controller);
+        this.stage = new Stage();
 
         Table table = new Table();
         table.center();
@@ -41,7 +36,7 @@ public class GameOverScreen implements Screen {
         gameOverLabel = new Label("GAME OVER!", new Label.LabelStyle(font, Color.WHITE));
         restartLabel = new Label("RESTART - PUSH ENTER", new Label.LabelStyle(font, Color.WHITE));
         exitLabel = new Label("EXIT - PUSH ESC", new Label.LabelStyle(font, Color.WHITE));
-        scoreLabel = new Label("SCORE: " + score, new Label.LabelStyle(font, Color.WHITE));
+        scoreLabel = new Label("SCORE: " + controller.getScore(), new Label.LabelStyle(font, Color.WHITE));
 
         table.add(gameOverLabel).expandX();
         table.row();
@@ -56,7 +51,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void show() {
-       Gdx.input.setInputProcessor(stage);
+       Gdx.input.setInputProcessor(overInput);
     }
 
     @Override
@@ -64,16 +59,10 @@ public class GameOverScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        scoreLabel.setText("SCORE: " + controller.getScore());
+
         stage.act(dt);
         stage.draw();
-
-        // Buttons operations
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            gameSpeed.setGameSpeed(300);
-            game.setScreen(new GameScreen(game)); // Restart
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit(); // Exit
-        }
     }
 
     @Override
@@ -99,5 +88,6 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        font.dispose();
     }
 }

@@ -1,28 +1,29 @@
-package com.biegan.game.sprites;
+package com.biegan.game.View.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
 
 public class RoadStripes {
 
     private float roadSpeed;
-    private Texture roadTexture;
-    private TextureRegion roadStripe; // Single region of lane texture
+    private Texture roadTexture = new Texture("C64_Style_Racing_Game/2D/lane.png");
+    private final TextureRegion roadStripe; // Single region of lane texture
 
-    private float[][] yPositions; // An array of y positions far each column and lane
-    private float[] xPositions; // An array of x positions for each column
-    private int numStripesPerColumn = 4;
-    private int numColumns = 2;
-    private GameSpeed gameSpeed;
+    private final float[][] yPositions; // An array of y positions far each column and lane
+    private final float[] xPositions; // An array of x positions for each column
+    private final int numStripesPerColumn = 4;
+    private final int numColumns = 2;
+    private GameController controller;
+    private boolean isMoving;
 
-    public RoadStripes(Texture roadTexture) {
-        this.roadTexture = roadTexture;
+    public RoadStripes(GameController controller) {
+        isMoving = false;
         this.roadStripe = new TextureRegion(roadTexture);
-        gameSpeed = new GameSpeed();
-        roadSpeed = gameSpeed.getGameSpeed();
+        this.controller = controller;
+        roadSpeed = controller.getGameSpeed();
 
         yPositions = new float[numColumns][numStripesPerColumn];
         xPositions = new float[numColumns];
@@ -42,16 +43,17 @@ public class RoadStripes {
 
     public void updateRoadStripes(float dt) {
         float stripeHeight = roadStripe.getRegionHeight() * BieganBrickRaceGame.sc + 70; // Height of lane
-
-        for (int col = 0; col < numColumns; col++) {
-            for (int row = 0; row < numStripesPerColumn; row++) {
-                yPositions[col][row] -= roadSpeed * dt;
-                if (yPositions[col][row] < -stripeHeight) { // Check if the belt has gone beyond the screen
-                    float highestYInColumn = yPositions[col][0]; // Find the highest lane in the column
-                    for (int j = 1; j < numStripesPerColumn; j++) {
-                        highestYInColumn = Math.max(highestYInColumn, yPositions[col][j]);
+        if (isMoving()) {
+            for (int col = 0; col < numColumns; col++) {
+                for (int row = 0; row < numStripesPerColumn; row++) {
+                    yPositions[col][row] -= roadSpeed * dt;
+                    if (yPositions[col][row] < -stripeHeight) { // Check if the belt has gone beyond the screen
+                        float highestYInColumn = yPositions[col][0]; // Find the highest lane in the column
+                        for (int j = 1; j < numStripesPerColumn; j++) {
+                            highestYInColumn = Math.max(highestYInColumn, yPositions[col][j]);
+                        }
+                        yPositions[col][row] = highestYInColumn + 1 * stripeHeight; // Position the new lane above the highest one
                     }
-                    yPositions[col][row] = highestYInColumn + 1 * stripeHeight; // Position the new lane above the highest one
                 }
             }
         }
@@ -66,7 +68,16 @@ public class RoadStripes {
             }
         }
     }
+
     public void setSpeed(float roadSpeed) {
         this.roadSpeed = roadSpeed;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
     }
 }

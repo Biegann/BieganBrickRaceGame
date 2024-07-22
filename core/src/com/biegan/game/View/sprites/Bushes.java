@@ -1,32 +1,34 @@
-package com.biegan.game.sprites;
+package com.biegan.game.View.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 import com.biegan.game.BieganBrickRaceGame;
-import com.biegan.game.utilities.GameSpeed;
+import com.biegan.game.Controller.GameController;
 
 import java.util.Random;
 
-public class Bushes extends Sprite {
-    private Texture bushesTexture;
-    private TextureRegion bushesRegion;
+public class Bushes extends Sprite implements Disposable {
+    private final Texture bushesTexture = new Texture("C64_Style_Racing_Game/2D/tree.png");
+    private final TextureRegion bushesRegion;
     private float bushesSpeed;
     private float yPosition;
     private float xPosition;
-    private Random random = new Random();
+    private final Random random = new Random();
     private float delayTime;
     public float elapsedTime;
-    private float screenHeight;
-    private GameSpeed gameSpeed;
+    private final float screenHeight;
+    private GameController controller;
+    private boolean isMoving;
 
-    public Bushes(Texture bushesTexture) {
-        this.bushesTexture = bushesTexture;
+    public Bushes(GameController controller) {
         this.bushesRegion = new TextureRegion(bushesTexture);
-        gameSpeed = new GameSpeed();
-        bushesSpeed =gameSpeed.getGameSpeed();
+        this.controller = controller;
+        isMoving = false;
+        bushesSpeed = controller.getGameSpeed();
 
         screenHeight = Gdx.graphics.getHeight();
         resetPosition(true);
@@ -36,17 +38,19 @@ public class Bushes extends Sprite {
         setBounds(xPosition, yPosition, stripeWidth, stripeHeight); // set initial dimensions and positions
     }
     public void bushesUpdate(float dt) {
-        if (elapsedTime >= delayTime) {
-            yPosition -= bushesSpeed * dt;
-            //reset position
-            if (yPosition + getHeight() < 0) {
-                resetPosition(false);
-                delayTime = random.nextFloat(2);
+        if (isMoving()) {
+            if (elapsedTime >= delayTime) {
+                yPosition -= bushesSpeed * dt;
+                //reset position
+                if (yPosition + getHeight() < 0) {
+                    resetPosition(false);
+                    delayTime = random.nextFloat(2);
+                }
+            } else {
+                elapsedTime += dt; // Increases the time if there is a delay
             }
-        } else {
-            elapsedTime += dt; // Increases the time if there is a delay
+            setPosition(xPosition, yPosition); // actualization of sprite position
         }
-        setPosition(xPosition, yPosition); // actualization of sprite position
     }
 
     public void resetPosition(boolean initial) {
@@ -68,5 +72,18 @@ public class Bushes extends Sprite {
     }
     public void setSpeed(float bushesSpeed) {
         this.bushesSpeed = bushesSpeed;
+    }
+
+    public void setMoving(boolean moving) {
+        isMoving = moving;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    @Override
+    public void dispose() {
+        bushesTexture.dispose();
     }
 }
