@@ -38,7 +38,7 @@ In the game, you control a brick that moves across the screen, aiming to avoid o
    java -jar build/libs/BieganBrickGame-1.0-SNAPSHOT.jar
    ```
 
-**INFO**
+##INFO##
 
 The BieganBrickGame is built using the Model-View-Controller (MVC) pattern:
 
