@@ -4,7 +4,7 @@
 
 BieganBrickGame is a 2D game inspired by the classic "Brick Games: Race". The game is built using the Model-View-Controller (MVC) pattern, which ensures a clear separation between the game logic, user interface, and game state management.
 
-In the game, you control a brick that moves across the screen, aiming to avoid obstacles and score points. The game features simple controls that make it easy to pick up and play.
+In the game, you control a car that moves across the screen, aiming to avoid obstacles and score points. The game features simple controls that make it easy to pick up and play.
 
 ## Controls
 
